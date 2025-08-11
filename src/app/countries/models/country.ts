@@ -1,0 +1,9 @@
+export interface DepCountry {
+  id: string;
+  name: string;
+  capital: string;
+  region: string;
+  subregion: string;
+  population: number;
+  area: number;
+}

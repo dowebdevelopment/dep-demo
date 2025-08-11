@@ -1,0 +1,7 @@
+@if (loading) {
+    <p>Loading country details...</p>
+} @else if (country) {
+    <app-country [country]="country"></app-country>
+} @else {
+    <p>Country not found.</p>
+}

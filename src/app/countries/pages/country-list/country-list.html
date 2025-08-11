@@ -1,0 +1,14 @@
+@if (loading) {
+    <p>Loading countries...</p>
+} @else if (countries && countries.length > 0) {
+    <ul>
+        @for (country of countries; track country) {
+            <li>
+                <a [routerLink]="['/countries', country.id]">{{ country.name }}</a>
+            </li>
+        }
+    </ul>
+} @else {
+    <p>No countries found.</p>
+}
+
