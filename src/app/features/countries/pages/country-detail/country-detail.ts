@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Country } from '../../../shared/components/country/country';
+import { Country } from '../../../../shared/components/country/country';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
