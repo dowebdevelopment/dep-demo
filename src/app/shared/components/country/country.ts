@@ -9,5 +9,7 @@ import { DepCountry } from '../../../features/countries/models/country';
 })
 export class Country {
   @Input()
-  public country!: DepCountry;
+  public country!: DepCountry | undefined;
+
+  // public country = input<DepCountry>();
 }

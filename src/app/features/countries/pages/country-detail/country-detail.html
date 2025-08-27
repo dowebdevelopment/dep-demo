@@ -1,7 +1,12 @@
-@if (loading) {
-    <p>Loading country details...</p>
-} @else if (country) {
-    <app-country [country]="country"></app-country>
-} @else {
-    <p>Country not found.</p>
+<!-- @if (country$ | async; as c) {
+    <app-country [country]="c"></app-country>
+} -->
+
+@let _country = country();
+@if (_country) {
+    <app-country [country]="_country"></app-country>
 }
+
+<p>
+    <a [routerLink]="['/countries', 'NLD']">NLD</a>
+</p>

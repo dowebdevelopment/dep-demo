@@ -1,0 +1,10 @@
+<h1>Signals</h1>
+
+<p><button type="button" (click)="handleFooClick()">Foo + 1</button></p>
+<p><button type="button" (click)="handleBarClick(bar() + 1)">Bar + 1</button></p>
+
+<!-- <p><button type="button" (click)="reset()">Reset</button></p> -->
+
+<p>Foo: {{ foo() }}</p>
+<p>Bar: {{ bar() }}</p>
+<p>Foo and Bar: {{ fooAndBar() }}</p>

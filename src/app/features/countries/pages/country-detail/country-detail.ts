@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map, switchMap } from 'rxjs';
 import { Country } from '../../../../shared/components/country/country';
-import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
 
 @Component({
   selector: 'app-country-detail',
-  imports: [Country],
+  imports: [Country, RouterLink],
   templateUrl: './country-detail.html',
   styleUrl: './country-detail.scss'
 })
@@ -15,43 +16,51 @@ export class CountryDetail {
   private countryFetcher = inject(CountryFetcher);
   private activatedRoute = inject(ActivatedRoute);
 
-  public country: DepCountry | undefined = undefined;
-  public loading: boolean = false;
+  // public country$!: Observable<DepCountry | undefined>;
+  public params = toSignal(this.activatedRoute.paramMap);
+  public code = computed(() => this.params()?.get('code') || '');
+  public country = toSignal(
+    toObservable(this.code).pipe(
+      switchMap((code) => this.countryFetcher.fetchByCode$(code)), 
+      map((country) => CountryMapper.toDepCountry(country))
+  ));
+  
+  // public country = this.activatedRoute.paramMap.pipe(
+  //   map((params) => params.get('code')),
+  //   filter((value) => value !== null),
+  //   switchMap((code) => this.countryFetcher.fetchByCode$(code)),
+  //   map((value) => CountryMapper.toDepCountry(value)),
+  // );
 
-  // Alternatively, if you want to use the observable method:
-  // public country$!: Observable<DepCountry[]>;
+  // constructor() {
+  //   effect(() => {
+  //     const code = this.code();
+  //     if (code) {
+  //       this.countryFetcher.fetchByCode$(code).pipe(
+  //         map((country) => CountryMapper.toDepCountry(country))
+  //       ).subscribe((value) => {
+  //         this.country.set(value);
+  //       });
+  //     }
+  //   });
+  // }
 
-  ngOnInit() {
-    this.loadCountry();
-  }
+  // ngOnInit() {
+  //   // this.loadCountry();
+  // }  
 
-  private async loadCountry() {
-    const code = this.activatedRoute.snapshot.paramMap.get('code');
-    if (!code) {
-      console.error('Country code is missing');
-      return;
-    }
+  // private async loadCountry() {
+  //   const code = this.activatedRoute.snapshot.paramMap.get('code');
+  //   if (!code) {
+  //     console.error('Country code is missing');
+  //     return;
+  //   }
 
-    this.loading = true;
-    const country = await this.countryFetcher.fetchByCode(code).finally(() => {
-      this.loading = false;
-    });
-    if (country) {
-      this.country = CountryMapper.toDepCountry(country);
-    }
+  //   this.country$ = this.countryFetcher.fetchByCode$(code).pipe(
+  //     map((country) => CountryMapper.toDepCountry(country))
+  //   );
 
-    // Alternatively, if you want to use the observable method:
-    // this.countryFetcher.fetchByCode$(code).subscribe((country) => {
-    //   this.loading = false;
-    //   this.country = country;
-    // });
-
-    // Or better yet, use the async pipe in the template
-    // this.country$ = this.countryFetcher.fetchByCode$(code);
-    // @if (country$ | async; as country) {
-    //   {{ country }}
-    // } @else {
-    //   Loading...
-    // }
-  }
+  //   // this.country$.subscribe((country) => this.country.set(country));
+  //   // this.country = toSignal(this.country$);
+  // }
 }
