@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FavoritesStore } from '../../../favorites/state/favorites.store';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
-import { Favorites } from '../../services/country/favorites';
 
 @Component({
   selector: 'app-country-list',
@@ -14,7 +14,7 @@ import { Favorites } from '../../services/country/favorites';
 export class CountryList {
   private countryFetcher = inject(CountryFetcher);
   
-  public favorites = inject(Favorites);
+  public store = inject(FavoritesStore);
   public countries = signal<DepCountry[]>([]);
   public loading = signal(false);
 

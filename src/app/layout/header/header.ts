@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Favorites } from '../../features/countries/services/country/favorites';
+import { FavoritesStore } from '../../features/favorites/state/favorites.store';
 
 @Component({
   selector: 'app-header',
@@ -9,5 +9,5 @@ import { Favorites } from '../../features/countries/services/country/favorites';
   styleUrl: './header.scss'
 })
 export class Header {
-  public favorites = inject(Favorites);
+  public store = inject(FavoritesStore);
 }
