@@ -1,8 +1,11 @@
-@if (loading) {
+@let _loading = loading();
+@let _countries = countries();
+
+@if (_loading) {
     <p>Loading countries...</p>
-} @else if (countries && countries.length > 0) {
+} @else if (_countries && _countries.length > 0) {
     <ul>
-        @for (country of countries; track country) {
+        @for (country of _countries; track country) {
             <li>
                 <a [routerLink]="['/countries', country.id]">{{ country.name }}</a>
             </li>

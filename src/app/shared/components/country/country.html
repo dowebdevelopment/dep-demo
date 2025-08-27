@@ -1,6 +1,11 @@
-<h1>{{ country.name }}</h1>
-<p>Capital: {{ country.capital }}</p>
-<p>Region: {{ country.region }}</p>
-<p>Subregion: {{ country.subregion }}</p>
-<p>Population: {{ country.population }}</p>
-<p>Area: {{ country.area }} km²</p>
+@let _country = country();
+@if (_country) {
+    <h1>{{ _country.name }}</h1>
+    <p>Capital: {{ _country.capital }}</p>
+    <p>Region: {{ _country.region }}</p>
+    <p>Subregion: {{ _country.subregion }}</p>
+    <p>Population: {{ _country.population }}</p>
+    <p>Area: {{ _country.area }} km²</p>
+} @else {
+    <p>No country data available.</p>
+}

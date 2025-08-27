@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { DepCountry } from '../../../features/countries/models/country';
 
 @Component({
@@ -8,6 +8,5 @@ import { DepCountry } from '../../../features/countries/models/country';
   styleUrl: './country.scss'
 })
 export class Country {
-  @Input()
-  public country!: DepCountry;
+  public country = input<DepCountry | undefined>(undefined);
 }

@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { filter, map, switchMap } from 'rxjs';
 import { Country } from '../../../../shared/components/country/country';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
@@ -7,51 +9,28 @@ import { CountryMapper } from '../../services/country/country-mapper';
 
 @Component({
   selector: 'app-country-detail',
-  imports: [Country],
+  imports: [Country, RouterLink],
   templateUrl: './country-detail.html',
   styleUrl: './country-detail.scss'
 })
 export class CountryDetail {
   private countryFetcher = inject(CountryFetcher);
   private activatedRoute = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
-  public country: DepCountry | undefined = undefined;
-  public loading: boolean = false;
-
-  // Alternatively, if you want to use the observable method:
-  // public country$!: Observable<DepCountry[]>;
+  public loading = signal<boolean>(false);
+  public country = signal<DepCountry | undefined>(undefined);
 
   ngOnInit() {
-    this.loadCountry();
-  }
-
-  private async loadCountry() {
-    const code = this.activatedRoute.snapshot.paramMap.get('code');
-    if (!code) {
-      console.error('Country code is missing');
-      return;
-    }
-
-    this.loading = true;
-    const country = await this.countryFetcher.fetchByCode(code).finally(() => {
-      this.loading = false;
+    this.activatedRoute.paramMap.pipe(
+      map((params) => params.get('code')), 
+      filter(Boolean),
+      switchMap((code) => this.countryFetcher.fetchByCode(code)),
+      filter(Boolean),
+      map((country) => CountryMapper.toDepCountry(country)),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((country) => {
+      this.country.set(country);
     });
-    if (country) {
-      this.country = CountryMapper.toDepCountry(country);
-    }
-
-    // Alternatively, if you want to use the observable method:
-    // this.countryFetcher.fetchByCode$(code).subscribe((country) => {
-    //   this.loading = false;
-    //   this.country = country;
-    // });
-
-    // Or better yet, use the async pipe in the template
-    // this.country$ = this.countryFetcher.fetchByCode$(code);
-    // @if (country$ | async; as country) {
-    //   {{ country }}
-    // } @else {
-    //   Loading...
-    // }
   }
 }

@@ -1,7 +1,10 @@
-@if (loading) {
+@if (loading()) {
     <p>Loading country details...</p>
-} @else if (country) {
-    <app-country [country]="country"></app-country>
+} @else if (country()) {
+    <app-country [country]="country()"></app-country>
 } @else {
     <p>Country not found.</p>
 }
+<hr />
+
+<p>Quicklink: <a [routerLink]="['/countries', 'NLD']">Netherlands</a></p>

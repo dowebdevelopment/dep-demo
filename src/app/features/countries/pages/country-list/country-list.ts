@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
@@ -13,20 +13,18 @@ import { CountryMapper } from '../../services/country/country-mapper';
 export class CountryList {
   private countryFetcher = inject(CountryFetcher);
 
-  public countries: DepCountry[] | undefined = undefined;
-  public loading: boolean = false;
+  public countries = signal<DepCountry[]>([]);
+  public loading = signal(false);
 
   ngOnInit() {
     this.loadCountries();
   }
 
   private async loadCountries() {
-    this.loading = true;
-    const countries = await this.countryFetcher.fetchAll().finally(() => {
-      this.loading = false;
+    this.loading.set(true);
+    this.countryFetcher.fetchAll().subscribe((countries) => {
+      this.countries.set(CountryMapper.toDepCountries(countries));
+      this.loading.set(false);
     });
-    if (countries) {
-      this.countries = CountryMapper.toDepCountries(countries);
-    }
   }
 }
