@@ -6,6 +6,7 @@ import { Country } from '../../../../shared/components/country/country';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
+import { Favorites } from '../../services/country/favorites';
 
 @Component({
   selector: 'app-country-detail',
@@ -17,7 +18,8 @@ export class CountryDetail {
   private countryFetcher = inject(CountryFetcher);
   private activatedRoute = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
-
+  
+  public favorites = inject(Favorites);
   public loading = signal<boolean>(false);
   public country = signal<DepCountry | undefined>(undefined);
 

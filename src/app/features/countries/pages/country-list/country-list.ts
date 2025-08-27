@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
+import { Favorites } from '../../services/country/favorites';
 
 @Component({
   selector: 'app-country-list',
@@ -12,7 +13,8 @@ import { CountryMapper } from '../../services/country/country-mapper';
 })
 export class CountryList {
   private countryFetcher = inject(CountryFetcher);
-
+  
+  public favorites = inject(Favorites);
   public countries = signal<DepCountry[]>([]);
   public loading = signal(false);
 

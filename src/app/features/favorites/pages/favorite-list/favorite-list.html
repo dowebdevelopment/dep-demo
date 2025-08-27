@@ -1,0 +1,9 @@
+@let _countries = countries();
+
+<h1>Favorites</h1>
+
+<ul>
+    @for (country of _countries; track country) {
+        <li><a [routerLink]="['/countries', country]">{{ country }}</a></li>
+    }
+</ul>

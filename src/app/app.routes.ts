@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './core/components/home/home';
 import { CountryDetail } from './features/countries/pages/country-detail/country-detail';
 import { CountryList } from './features/countries/pages/country-list/country-list';
+import { FavoriteList } from './features/favorites/pages/favorite-list/favorite-list';
 
 export const routes: Routes = [
     {
@@ -15,5 +16,8 @@ export const routes: Routes = [
     }, {
         path: 'countries/:code',
         component: CountryDetail
+    }, {
+        path: 'favorites',
+        component: FavoriteList
     }, 
 ];

@@ -1,7 +1,14 @@
+@let _country = country();
+
 @if (loading()) {
     <p>Loading country details...</p>
-} @else if (country()) {
-    <app-country [country]="country()"></app-country>
+} @else if (_country) {
+    <h1>{{ _country.name }}
+        <span (click)="favorites.toggle(_country.id!)">
+            {{ favorites.isFavorite(_country.id!) ? '★' : '☆' }}
+        </span>
+    </h1>
+    <app-country [country]="_country"></app-country>
 } @else {
     <p>Country not found.</p>
 }
