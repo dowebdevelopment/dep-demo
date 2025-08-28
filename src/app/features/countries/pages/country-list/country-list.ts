@@ -1,9 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DepCountry } from '../../models/country';
+import { Store } from '@ngxs/store';
+import { SetCountries } from '../../../../shared/state/countries/countries.actions';
+import { CountriesState } from '../../../../shared/state/countries/countries.state';
+import { ToggleFavorite } from '../../../../shared/state/favorites/favorites.actions';
+import { FavoritesState } from '../../../../shared/state/favorites/favorites.state';
+import { CountryAndFavorite } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
-import { Favorites } from '../../services/country/favorites';
 
 @Component({
   selector: 'app-country-list',
@@ -12,21 +16,33 @@ import { Favorites } from '../../services/country/favorites';
   styleUrl: './country-list.scss'
 })
 export class CountryList {
+  private store = inject(Store);
   private countryFetcher = inject(CountryFetcher);
+  private countries = this.store.selectSignal(CountriesState.getAll);
+  private favoriteIds = this.store.selectSignal(FavoritesState.ids);
   
-  public favorites = inject(Favorites);
-  public countries = signal<DepCountry[]>([]);
   public loading = signal(false);
+  public countriesAndFavorites: Signal<CountryAndFavorite[]> = computed(() =>
+    this.countries().map(c => ({
+      ...CountryMapper.toDepCountry(c),
+      isFavorite: this.favoriteIds().includes(c.cca3),
+    }))
+  );
 
-  ngOnInit() {
-    this.loadCountries();
+  constructor() {
+    effect(() => {
+      if (this.countries().length > 0 || this.loading()) {
+        return;
+      }
+      this.loading.set(true);
+      this.countryFetcher.fetchAll().subscribe((countries) => {
+        this.store.dispatch(new SetCountries(countries));
+        this.loading.set(false);
+      });
+    });
   }
 
-  private async loadCountries() {
-    this.loading.set(true);
-    this.countryFetcher.fetchAll().subscribe((countries) => {
-      this.countries.set(CountryMapper.toDepCountries(countries));
-      this.loading.set(false);
-    });
+  public toggleFavorite(id: string) {
+    this.store.dispatch(new ToggleFavorite(id));
   }
 }

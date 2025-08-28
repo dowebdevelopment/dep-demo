@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Favorites } from '../../../countries/services/country/favorites';
+import { Store } from '@ngxs/store';
+import { FavoritesState } from '../../../../shared/state/favorites/favorites.state';
 
 @Component({
   selector: 'app-favorite-list',
@@ -9,6 +10,7 @@ import { Favorites } from '../../../countries/services/country/favorites';
   styleUrl: './favorite-list.scss'
 })
 export class FavoriteList {
-  private favorites = inject(Favorites)
-  public countries = this.favorites.list;
+  private store = inject(Store);
+
+  public countries = this.store.selectSignal(FavoritesState.ids);
 }

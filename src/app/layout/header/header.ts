@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Favorites } from '../../features/countries/services/country/favorites';
+import { Store } from '@ngxs/store';
+import { FavoritesState } from '../../shared/state/favorites/favorites.state';
 
 @Component({
   selector: 'app-header',
@@ -9,5 +10,6 @@ import { Favorites } from '../../features/countries/services/country/favorites';
   styleUrl: './header.scss'
 })
 export class Header {
-  public favorites = inject(Favorites);
+  private store = inject(Store); 
+  public count = this.store.selectSignal(FavoritesState.count);
 }

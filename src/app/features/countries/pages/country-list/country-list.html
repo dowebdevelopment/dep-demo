@@ -1,15 +1,15 @@
 @let _loading = loading();
-@let _countries = countries();
+@let _countries = countriesAndFavorites();
 
 @if (_loading) {
     <p>Loading countries...</p>
 } @else if (_countries && _countries.length > 0) {
     <ul>
-        @for (country of _countries; track country) {
+        @for (country of _countries; track country.id) {
             <li>
                 <a [routerLink]="['/countries', country.id]">{{ country.name }}</a> 
-                <span (click)="favorites.toggle(country.id)">
-                    {{ favorites.isFavorite(country.id) ? '★' : '☆' }}
+                <span (click)="toggleFavorite(country.id)">
+                    {{ country.isFavorite ? '★' : '☆' }}
                 </span>
             </li>
         }

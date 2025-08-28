@@ -1,12 +1,14 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { filter, map, switchMap } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { filter, map } from 'rxjs';
 import { Country } from '../../../../shared/components/country/country';
-import { DepCountry } from '../../models/country';
+import { ToggleFavorite } from '../../../../shared/state/favorites/favorites.actions';
+import { FavoritesState } from '../../../../shared/state/favorites/favorites.state';
+import { CountryAndFavorite, DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
-import { Favorites } from '../../services/country/favorites';
 
 @Component({
   selector: 'app-country-detail',
@@ -17,22 +19,36 @@ import { Favorites } from '../../services/country/favorites';
 export class CountryDetail {
   private countryFetcher = inject(CountryFetcher);
   private activatedRoute = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-  
-  public favorites = inject(Favorites);
-  public loading = signal<boolean>(false);
-  public country = signal<DepCountry | undefined>(undefined);
+  private store = inject(Store);
 
-  ngOnInit() {
-    this.activatedRoute.paramMap.pipe(
-      map((params) => params.get('code')), 
-      filter(Boolean),
-      switchMap((code) => this.countryFetcher.fetchByCode(code)),
-      filter(Boolean),
-      map((country) => CountryMapper.toDepCountry(country)),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe((country) => {
-      this.country.set(country);
+  private country = signal<DepCountry | null>(null);
+  private favoriteIds = this.store.selectSignal(FavoritesState.ids);
+  private code = toSignal(this.activatedRoute.paramMap.pipe(
+    map((params) => params.get('code')),
+    filter(Boolean),
+  ));
+  
+  public loading = signal<boolean>(false);
+  public countryAndFavorite: Signal<CountryAndFavorite | null> = computed(() => {
+    const country = this.country();
+    if (!country) return null;
+    return {
+      ...country,
+      isFavorite: this.favoriteIds().includes(this.code()!)
+    }
+  });
+
+  constructor() {
+    effect(() => {
+      this.loading.set(true);
+      this.countryFetcher.fetchByCode(this.code()!).subscribe((country) => {
+        this.country.set(CountryMapper.toDepCountry(country));
+        this.loading.set(false);
+      });
     });
+  }
+
+  public toggleFavorite(id: string) {
+    this.store.dispatch(new ToggleFavorite(id));
   }
 }
