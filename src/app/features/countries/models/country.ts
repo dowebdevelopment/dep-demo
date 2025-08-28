@@ -7,3 +7,9 @@ export interface DepCountry {
   population: number;
   area: number;
 }
+
+export type Favorite = {
+  isFavorite: boolean;
+}
+
+export type CountryAndFavorite = DepCountry & Favorite;

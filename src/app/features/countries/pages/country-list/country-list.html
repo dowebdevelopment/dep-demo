@@ -5,11 +5,11 @@
     <p>Loading countries...</p>
 } @else if (_countries && _countries.length > 0) {
     <ul>
-        @for (country of _countries; track country) {
+        @for (country of _countries; track country.id) {
             <li>
                 <a [routerLink]="['/countries', country.id]">{{ country.name }}</a> 
-                <span (click)="store.toggle(country.id)">
-                    {{ store.isFavorite(country.id) ? '★' : '☆' }}
+                <span (click)="toggle(country.id)">
+                    {{ country.isFavorite ? '★' : '☆' }}
                 </span>
             </li>
         }

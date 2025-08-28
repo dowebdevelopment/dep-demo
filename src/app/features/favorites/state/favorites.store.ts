@@ -1,3 +1,4 @@
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
 import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 
@@ -5,6 +6,7 @@ export type FavoritesState = { ids: Set<string> };
 
 export const FavoritesStore = signalStore(
   { providedIn: 'root' },
+  withDevtools('favorites'),
   withState<FavoritesState>({ ids: new Set([]) }),
   withComputed(({ ids }) => ({
     count: computed(() => ids().size),

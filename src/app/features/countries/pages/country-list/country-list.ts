@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FavoritesStore } from '../../../favorites/state/favorites.store';
-import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
+import { CountriesStore } from '../../state/countries.store';
 
 @Component({
   selector: 'app-country-list',
@@ -13,20 +13,31 @@ import { CountryMapper } from '../../services/country/country-mapper';
 })
 export class CountryList {
   private countryFetcher = inject(CountryFetcher);
+  private countriesStore = inject(CountriesStore);
+  private favoritesStore = inject(FavoritesStore);
   
-  public store = inject(FavoritesStore);
-  public countries = signal<DepCountry[]>([]);
   public loading = signal(false);
+  public countries = computed(() => {
+    return CountryMapper.toDepCountries(this.countriesStore.data()).map(country => ({
+      ...country,
+      isFavorite: this.favoritesStore.isFavorite(country.id)
+    }));
+  });
 
-  ngOnInit() {
-    this.loadCountries();
+  constructor() {
+    effect(() => {
+      if (this.countries().length > 0 || this.loading()) {
+        return;
+      }
+      this.loading.set(true);
+      this.countryFetcher.fetchAll().subscribe((countries) => {
+        this.countriesStore.set(countries);
+        this.loading.set(false);
+      });
+    })
   }
 
-  private async loadCountries() {
-    this.loading.set(true);
-    this.countryFetcher.fetchAll().subscribe((countries) => {
-      this.countries.set(CountryMapper.toDepCountries(countries));
-      this.loading.set(false);
-    });
+  public toggle(id: string) {
+    this.favoritesStore.toggle(id);
   }
 }
