@@ -3,7 +3,7 @@ import { computed, Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class Favorites {
+export class FavoriteState {
   private ids = signal<Set<string>>(new Set());
 
   public count = computed(() => this.ids().size);

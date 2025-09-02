@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
-import { Favorites } from '../../services/country/favorites';
+import { CountryState } from '../../services/country/country-state';
+import { FavoriteState } from '../../services/favorites/favorites-state';
 
 @Component({
   selector: 'app-country-list',
@@ -13,19 +13,22 @@ import { Favorites } from '../../services/country/favorites';
 })
 export class CountryList {
   private countryFetcher = inject(CountryFetcher);
+  private countryState = inject(CountryState);
   
-  public favorites = inject(Favorites);
-  public countries = signal<DepCountry[]>([]);
+  public favoriteState = inject(FavoriteState);
   public loading = signal(false);
+  public countries = computed(() => CountryMapper.toDepCountries(this.countryState.list()));
 
   ngOnInit() {
-    this.loadCountries();
+    if (this.countryState.list().length === 0) {
+      this.loadCountries();
+    }
   }
 
   private async loadCountries() {
     this.loading.set(true);
     this.countryFetcher.fetchAll().subscribe((countries) => {
-      this.countries.set(CountryMapper.toDepCountries(countries));
+      this.countryState.setCountries(countries);
       this.loading.set(false);
     });
   }

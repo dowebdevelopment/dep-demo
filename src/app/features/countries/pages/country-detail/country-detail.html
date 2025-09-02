@@ -4,8 +4,8 @@
     <p>Loading country details...</p>
 } @else if (_country) {
     <h1>{{ _country.name }}
-        <span (click)="favorites.toggle(_country.id!)">
-            {{ favorites.isFavorite(_country.id!) ? '★' : '☆' }}
+        <span (click)="favoriteState.toggle(_country.id!)">
+            {{ favoriteState.isFavorite(_country.id!) ? '★' : '☆' }}
         </span>
     </h1>
     <app-country [country]="_country"></app-country>

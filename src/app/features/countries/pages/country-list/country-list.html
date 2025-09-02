@@ -8,8 +8,8 @@
         @for (country of _countries; track country) {
             <li>
                 <a [routerLink]="['/countries', country.id]">{{ country.name }}</a> 
-                <span (click)="favorites.toggle(country.id)">
-                    {{ favorites.isFavorite(country.id) ? '★' : '☆' }}
+                <span (click)="favoriteState.toggle(country.id)">
+                    {{ favoriteState.isFavorite(country.id) ? '★' : '☆' }}
                 </span>
             </li>
         }

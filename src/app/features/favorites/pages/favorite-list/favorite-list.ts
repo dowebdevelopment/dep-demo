@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Favorites } from '../../../countries/services/country/favorites';
+import { FavoriteState } from '../../../countries/services/favorites/favorites-state';
 
 @Component({
   selector: 'app-favorite-list',
@@ -9,6 +9,6 @@ import { Favorites } from '../../../countries/services/country/favorites';
   styleUrl: './favorite-list.scss'
 })
 export class FavoriteList {
-  private favorites = inject(Favorites)
-  public countries = this.favorites.list;
+  private favoriteState = inject(FavoriteState)
+  public countries = this.favoriteState.list;
 }
