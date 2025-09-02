@@ -26,10 +26,10 @@ export class FavoritesState {
     }
 
     @Action(ToggleFavorite)
-    public toggle(helpers: StateContext<FavoritesStateModel>, action: ToggleFavorite) {
-        const ids = helpers.getState().ids;
+    public toggle(store: StateContext<FavoritesStateModel>, action: ToggleFavorite) {
+        const ids = store.getState().ids;
         const next = ids.includes(action.id) ? ids.filter(x => x !== action.id) : [...ids, action.id];
-        helpers.patchState({ ids: next });
+        store.patchState({ ids: next });
     }
 
 }

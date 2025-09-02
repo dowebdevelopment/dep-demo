@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { FavoritesState } from '../../../../shared/state/favorites/favorites.state';
+import { FavoritesState } from '../../state/favorites.state';
 
 @Component({
   selector: 'app-favorite-list',

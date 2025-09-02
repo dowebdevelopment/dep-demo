@@ -1,13 +1,13 @@
 import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { SetCountries } from '../../../../shared/state/countries/countries.actions';
-import { CountriesState } from '../../../../shared/state/countries/countries.state';
-import { ToggleFavorite } from '../../../../shared/state/favorites/favorites.actions';
-import { FavoritesState } from '../../../../shared/state/favorites/favorites.state';
+import { ToggleFavorite } from '../../../favorites/state/favorites.actions';
+import { FavoritesState } from '../../../favorites/state/favorites.state';
 import { CountryAndFavorite } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
+import { SetCountries } from '../../state/countries.actions';
+import { CountriesState } from '../../state/countries.state';
 
 @Component({
   selector: 'app-country-list',

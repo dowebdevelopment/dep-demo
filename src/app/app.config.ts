@@ -6,8 +6,8 @@ import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { withNgxsRouterPlugin } from '@ngxs/router-plugin';
 import { provideStore } from '@ngxs/store';
 import { routes } from './app.routes';
-import { CountriesState } from './shared/state/countries/countries.state';
-import { FavoritesState } from './shared/state/favorites/favorites.state';
+import { CountriesState } from './features/countries/state/countries.state';
+import { FavoritesState } from './features/favorites/state/favorites.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
