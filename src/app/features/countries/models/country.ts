@@ -8,9 +8,3 @@ export interface DepCountry {
   area: number;
   isFavorite: boolean;
 }
-
-export type Favorite = {
-  isFavorite: boolean;
-}
-
-export type CountryAndFavorite = DepCountry & Favorite;

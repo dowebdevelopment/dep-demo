@@ -25,7 +25,11 @@ export class CountryDetail {
     filter(Boolean)
   ));
 
-  public depCountry = computed(() => CountryMapper.toDepCountry(this.country()!, this.favoriteStore.list()));
+  public depCountry = computed(() => {
+    const c = this.country();
+    if (!c) return undefined;
+    return CountryMapper.toDepCountry(c, this.favoriteStore.list());
+  });
   public loading = signal<boolean>(false);
 
   constructor() {
