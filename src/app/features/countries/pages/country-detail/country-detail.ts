@@ -7,7 +7,7 @@ import { filter, map } from 'rxjs';
 import { CountryItem } from '../../../../shared/components/country/country';
 import { ToggleFavorite } from '../../../favorites/state/favorites.actions';
 import { FavoritesState } from '../../../favorites/state/favorites.state';
-import { CountryAndFavorite } from '../../models/country';
+import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
 
@@ -30,7 +30,7 @@ export class CountryDetail {
   ));
   
   public loading = signal<boolean>(false);
-  public depCountry: Signal<CountryAndFavorite | null> = computed(() => {
+  public depCountry: Signal<DepCountry | null> = computed(() => {
     const country = this.country();
     if (!country) return null;
     return CountryMapper.toDepCountry(country, this.favoriteIds());

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CountryAndFavorite } from '../../../features/countries/models/country';
+import { DepCountry } from '../../../features/countries/models/country';
 
 @Component({
   selector: 'app-country',
@@ -8,5 +8,5 @@ import { CountryAndFavorite } from '../../../features/countries/models/country';
   styleUrl: './country.scss'
 })
 export class CountryItem {
-  public country = input<CountryAndFavorite | undefined>(undefined);
+  public country = input<DepCountry | undefined>(undefined);
 }
