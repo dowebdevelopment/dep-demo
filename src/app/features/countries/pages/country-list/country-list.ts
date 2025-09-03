@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FavoritesStore } from '../../../favorites/state/favorites.store';
 import { CountryFetcher } from '../../services/country/country-fetcher';
@@ -21,17 +21,18 @@ export class CountryList {
     return CountryMapper.toDepCountries(this.countriesStore.data(), this.favoritesStore.list());
   });
 
-  constructor() {
-    effect(() => {
-      if (this.countries().length > 0) {
-        return;
-      }
-      this.loading.set(true);
-      this.countryFetcher.fetchAll().subscribe((countries) => {
-        this.countriesStore.set(countries);
-        this.loading.set(false);
-      });
-    })
+  ngOnInit() {
+    if (this.countries().length === 0) {
+      this.loadCountries();
+    }
+  }
+
+  public loadCountries() {
+    this.loading.set(true);
+    this.countryFetcher.fetchAll().subscribe((countries) => {
+      this.countriesStore.set(countries);
+      this.loading.set(false);
+    });
   }
 
   public toggle(id: string) {
