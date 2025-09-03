@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ToggleFavorite } from '../../../favorites/state/favorites.actions';
@@ -26,16 +26,17 @@ export class CountryList {
     CountryMapper.toDepCountries(this.countries(), this.favoriteIds())
   );
 
-  constructor() {
-    effect(() => {
-      if (this.countries().length > 0) {
-        return;
-      }
-      this.loading.set(true);
-      this.countryFetcher.fetchAll().subscribe((countries) => {
-        this.store.dispatch(new SetCountries(countries));
-        this.loading.set(false);
-      });
+  ngOnInit() {
+    if (this.countries().length === 0) {
+      this.loadCountries();
+    }
+  }
+
+  public loadCountries() {
+    this.loading.set(true);
+    this.countryFetcher.fetchAll().subscribe((countries) => {
+      this.store.dispatch(new SetCountries(countries));
+      this.loading.set(false);
     });
   }
 
