@@ -6,7 +6,7 @@ import { DepCountry } from '../../models/country';
   providedIn: 'root'
 })
 export class CountryMapper {
-  public static toDepCountry(country: Country): DepCountry {
+  public static toDepCountry(country: Country, favorites: string[]): DepCountry {
     return {
       id: country.cca3,
       name: country.name.common,
@@ -14,7 +14,8 @@ export class CountryMapper {
       region: country.region,
       subregion: country.subregion || 'Unknown',
       population: country.population,
-      area: country.area
+      area: country.area,
+      isFavorite: favorites.includes(country.cca3)
     };
 
     // Or keep all properties from Country and extend with custom ones
@@ -25,7 +26,7 @@ export class CountryMapper {
     // };
   }
 
-  public static toDepCountries(countries: Country[]): DepCountry[] {
-    return countries.map(country => CountryMapper.toDepCountry(country));
+  public static toDepCountries(countries: Country[], favorites: string[]): DepCountry[] {
+    return countries.map(country => CountryMapper.toDepCountry(country, favorites));
   }
 }

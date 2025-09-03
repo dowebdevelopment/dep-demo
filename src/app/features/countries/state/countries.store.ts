@@ -3,7 +3,9 @@ import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { Country } from '@yusifaliyevpro/countries/types';
 
-export type CountriesState = { data: Country[] };
+export interface CountriesState { 
+  data: Country[];
+};
 
 export const CountriesStore = signalStore(
   { providedIn: 'root' },

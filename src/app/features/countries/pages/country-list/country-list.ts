@@ -18,15 +18,12 @@ export class CountryList {
   
   public loading = signal(false);
   public countries = computed(() => {
-    return CountryMapper.toDepCountries(this.countriesStore.data()).map(country => ({
-      ...country,
-      isFavorite: this.favoritesStore.isFavorite(country.id)
-    }));
+    return CountryMapper.toDepCountries(this.countriesStore.data(), this.favoritesStore.list());
   });
 
   constructor() {
     effect(() => {
-      if (this.countries().length > 0 || this.loading()) {
+      if (this.countries().length > 0) {
         return;
       }
       this.loading.set(true);
