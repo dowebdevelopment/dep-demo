@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ToggleFavorite } from '../../../favorites/state/favorites.actions';
 import { FavoritesState } from '../../../favorites/state/favorites.state';
-import { CountryAndFavorite } from '../../models/country';
+import { DepCountry } from '../../models/country';
 import { CountryFetcher } from '../../services/country/country-fetcher';
 import { CountryMapper } from '../../services/country/country-mapper';
 import { SetCountries } from '../../state/countries.actions';
@@ -22,7 +22,7 @@ export class CountryList {
   private favoriteIds = this.store.selectSignal(FavoritesState.ids);
   
   public loading = signal(false);
-  public depCountries: Signal<CountryAndFavorite[]> = computed(() =>
+  public depCountries: Signal<DepCountry[]> = computed(() =>
     CountryMapper.toDepCountries(this.countries(), this.favoriteIds())
   );
 
