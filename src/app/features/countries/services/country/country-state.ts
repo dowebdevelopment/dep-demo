@@ -6,8 +6,7 @@ import { Country } from '@yusifaliyevpro/countries/types';
 })
 export class CountryState {
   private countries = signal<Set<Country>>(new Set());
-
-  public count = computed(() => this.countries().size);
+  
   public list = computed(() => [...this.countries()]);
 
   public setCountries(countries: Country[]): void {

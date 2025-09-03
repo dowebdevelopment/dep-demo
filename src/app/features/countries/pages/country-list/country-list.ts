@@ -17,7 +17,7 @@ export class CountryList {
   
   public favoriteState = inject(FavoriteState);
   public loading = signal(false);
-  public countries = computed(() => CountryMapper.toDepCountries(this.countryState.list()));
+  public countries = computed(() => CountryMapper.toDepCountries(this.countryState.list(), this.favoriteState.list()));
 
   ngOnInit() {
     if (this.countryState.list().length === 0) {

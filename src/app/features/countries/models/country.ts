@@ -6,4 +6,5 @@ export interface DepCountry {
   subregion: string;
   population: number;
   area: number;
+  isFavorite: boolean;
 }
