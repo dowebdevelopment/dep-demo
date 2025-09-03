@@ -7,6 +7,6 @@ import { CountryAndFavorite } from '../../../features/countries/models/country';
   templateUrl: './country.html',
   styleUrl: './country.scss'
 })
-export class Country {
+export class CountryItem {
   public country = input<CountryAndFavorite | undefined>(undefined);
 }

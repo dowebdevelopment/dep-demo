@@ -22,16 +22,13 @@ export class CountryList {
   private favoriteIds = this.store.selectSignal(FavoritesState.ids);
   
   public loading = signal(false);
-  public countriesAndFavorites: Signal<CountryAndFavorite[]> = computed(() =>
-    this.countries().map(c => ({
-      ...CountryMapper.toDepCountry(c),
-      isFavorite: this.favoriteIds().includes(c.cca3),
-    }))
+  public depCountries: Signal<CountryAndFavorite[]> = computed(() =>
+    CountryMapper.toDepCountries(this.countries(), this.favoriteIds())
   );
 
   constructor() {
     effect(() => {
-      if (this.countries().length > 0 || this.loading()) {
+      if (this.countries().length > 0) {
         return;
       }
       this.loading.set(true);
